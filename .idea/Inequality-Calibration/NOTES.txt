@@ -1,0 +1,14 @@
+NOTES:
+
+- Problem with find_nextk_regimeI
+	- can get negative number, depending on initial guess.
+	- Hits max even for 1000 when using sigma =2.
+- Still need to check all of the helper functions for finding regimeIU steady state.
+- Add KTOL to functions where appproriate
+- Can add finder for ss in last stage, then set KRANGE to necessarily include this level.
+- Can solve for SS by hand and check that the economy converges there.
+- fix nu's in pdf.
+- for checking SS, can drop the economy off in a SS and make sure it stays there.
+- Add an assertion for avoiding the trivial steady state.
+- add derivate of ratio proof to pdf.
+- add assertion for existence of second stage.
