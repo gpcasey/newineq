@@ -7,17 +7,17 @@ import matplotlib as plot
 #####################################Define Constants
 
 # Technical Constants
-MAXT = 10
-KRANGE = 20
+MAXT = 30
+KRANGE = 1000
 KSTEP = 1000.0
 KTOL = .01
 
 #Parameters
-SIGMA = 1.0
+SIGMA = 1.5
 EPSILON = .7
 DELTA = 1.0
-EDU_TECH = .1
-GAMMA = .1
+EDU_TECH = 1
+GAMMA = .5
 BETA = .25
 THETA_BAR = .01
 RICH_FRAC = .001
@@ -54,8 +54,6 @@ current_economy = ineq.Economy(indiv_r=first_rich, indiv_p=first_poor, school=fi
 
 
 #Assertions for getting through all stages
-print current_economy.find_ss_regimeI(krange=KRANGE, kstep=KSTEP)
-print current_economy.find_khat()
 #print current_economy.no_regimeI_ss(krange=KRANGE, kstep=KSTEP)
 
 
@@ -78,7 +76,7 @@ for t in range(MAXT):
     new_econ = current_economy.start_next(krange=KRANGE, kstep=KSTEP)
     current_economy = new_econ
     count += 1
-    print count, current_economy.get_littlek(), current_economy.poor_constrained(), current_economy.poor_zero()
+    print count
 
 
 

@@ -308,18 +308,25 @@ class Economy:
         """
         assert isinstance(kstep, float)
         diff = float("inf")
+        last_diff = float("inf")
         best_k = float("-inf")
-        for dummy_k in range(1,  krange * int(kstep)):
-            k = 1.0 * dummy_k / kstep
-            new_littleK = self.calc_littlek(k)[2]
-            new_diff = abs(k - new_littleK)
-            if new_diff < diff:
-                diff = new_diff
-                best_k = k
-
-        assert diff < .01
-        assert best_k != 1 / kstep, "min k"
-        assert best_k != (1.0 * krange * int(kstep) - 1) / kstep, "max k"
+        EXIT = False
+        while not EXIT:
+            for dummy_k in range(1,  int(krange * kstep)):
+                # Calculate difference for new guess k
+                k = 1.0 * dummy_k / kstep
+                new_littleK = self.calc_littlek(k)[2]
+                new_diff = abs(k - new_littleK)
+                #if lowest guess yet, save.
+                if new_diff < diff:
+                    diff = new_diff
+                    best_k = k
+                if new_diff > last_diff:  # exit loop if getting farther from the solution
+                    EXIT = True
+                last_diff = new_diff
+        assert diff < (1.0 / kstep), "Big Diff: " + str(best_k) + ", " + str(diff)
+        assert best_k != (1.0 / kstep), "min k"
+        assert best_k != ((1.0 * krange * int(kstep) - 1) / kstep), "max k"
         return best_k, diff
 
     def start_next(self, krange, kstep):
@@ -351,6 +358,7 @@ class Economy:
         return new_econ
 
 
+    ###################### Methods for checking assumptions ####################################
 
     def find_khat(self):
         """
@@ -399,17 +407,23 @@ class Economy:
         """
         assert isinstance(kstep, float)
         diff = float("inf")
+        last_diff = float("inf")
         best_k = float("-inf")
-        for dummy_k in range(1,  krange * int(kstep)):
-            in_k = 1.0 * dummy_k / kstep
-            newk = self.regimeI_findnextk(k=in_k, krange=krange, kstep= kstep)
-            new_diff = abs(newk - in_k)
-            if new_diff < diff:
-                diff = new_diff
-                best_k = in_k
-        assert diff < .01
-        assert best_k != 1 / kstep, "min k"
-        assert best_k != krange / kstep, "max k"
+        EXIT = False
+        while not EXIT:
+            for dummy_k in range(1,  int(krange * kstep)):
+                in_k = 1.0 * dummy_k / kstep
+                newk = self.regimeI_findnextk(k=in_k, krange=krange, kstep= kstep)
+                new_diff = abs(newk - in_k)
+                if new_diff < diff:
+                    diff = new_diff
+                    best_k = in_k
+                if new_diff > last_diff:
+                    EXIT = True
+                last_diff = new_diff
+        assert diff < (1.0 / kstep)
+        assert best_k != (1.0 / kstep), "min k"
+        assert best_k != ((1.0 * krange * int(kstep) - 1) / kstep), "max k"
         return best_k, diff
 
     def no_regimeI_ss(self, krange, kstep):
@@ -421,6 +435,7 @@ class Economy:
     def avoid_trivial_ss(self):
         """
         An assertion that the economy avoids the trivial steady state.
+        Return True if second bequest is less than 1st bequest.
         """
         pass
 
